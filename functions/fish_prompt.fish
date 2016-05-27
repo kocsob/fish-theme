@@ -1,5 +1,6 @@
 set -g fish_color_user green --bold
 set -g fish_color_host cyan --bold
+set -g fish_color_container_name yellow --bold
 set -g fish_color_cwd normal
 #set -g fish_color_git_path yellow
 
@@ -18,8 +19,16 @@ function fish_prompt --description "Write out the prompt"
   echo -n '@'
 
   # Host
-  set_color $fish_color_host
-  echo -n (hostname)
+  if [ -f /.dockerenv ]
+    set_color $fish_color_container_name
+  else
+    set_color $fish_color_host
+  end
+  if set -qx CONTAINER_NAME
+    echo -n $CONTAINER_NAME
+  else
+    echo -n (hostname)
+  end
   set_color normal
 
   echo -n ':'
